@@ -1,6 +1,6 @@
 # Git Note
 
-## Check changes
+## Check Changes
 
 Git has various ways to check changes made, and the most basic one is `git
 diff`.  Normally, we want to check these changes.
@@ -29,7 +29,7 @@ commit.
 
 `git diff <commit> <commit>` compares differences between two given commits.
 
-## Remove file
+## Remove File
 
 Remember that git has two areas in normal workflow, working tree directory and
 staging area, respectively. Commands vary depending on from which part(s) we
@@ -57,7 +57,78 @@ or remove from both forcefully with `git -f rm <file>...`. This is a safety
 feature to prevent accidental removal of data that has not yet been recorded in
 a snapshot and that can not be recovered from Git.
 
-## Filter commit
+## Remote Branch
+
+Some implict rules come into play when git handles remote branch. To understand
+these implict rules, we elaborate the following topics step by step.
+
+1. How is branch implemented.
+2. How does git synchronize remote and local branch.
+3. What do commonly used git branch commands do.
+
+### Branch in nutshell
+
+Branch is a pointer in nutshell. It points to a commit(or nothing right after
+initialization), and moves forward as commits added. We are always working on
+one branch, and only this branch moves when we commit, while other branches
+stay still. Git keeps a pointer of branch called HEAD to record where we are,
+the whole relation looks like this.
+
+```txt
+HEAD -> branch -> commit
+```
+
+Add `--decorate` option to `git log` shows HEAD and branch information
+explicitly.
+
+### Synchronize remote and local
+
+Git manipulates three branches to make remote and local branches work properly.
+
+- Upstream branch
+- Remote-tracking branch
+- local branch
+
+Upstream branch is the branch that stores in the remote. The local reference of
+upstream branch is Remote-tracking branch, it takes the form
+`<remote>/<branch>`.
+
+Remote-tracking branch here acts as the bridge between local branch and
+upstream branch, so that all work can be done locally without having to
+contract remotes. When git fetches data from the remote, remote-tracking branch
+synchronizes with the upstream branch automatically.
+
+Local branch are created locally. It can track one upstream branch, and this
+is manifested as tracking the corresponding remote-tracking branch.
+
+### Git branch commands
+
+We introduce git branch commands in the order of normal workflow.
+
+1. `git clone <remote>` clones the remote repository. Now the local has all
+   remote branches' information. Note that `git clone <remote>` only creates
+   one local branch that trackes the remote master branch, other remote
+   branches are not tracked(i.e. corresponding local branches are not created).
+   So after `git clone <remote>`, we can see a local master branch and a
+   remote-tracking `<remote>/master` branch which is corresponding to the
+   remote master branch.
+2. `git fetch <remote>` fetches data from the remote. Remote-tracking branches
+   are moved forward, while local branches(including local branches that
+   trackes remote-tracking branches) stay still.
+3. `git remote add <remote>` followed by a `git fetch <remote>` adds a new
+   remote and fetches data from it. Like `git clone <remote>`, it creates one
+   remote-tracking branch that is corresponding to the remote master branch.
+   But it does not create a local branch, because there is already one.
+4. `git push <remote> <branch>` pushes the branch to the remote, then the
+   remote adds this branch, which can be fetched later by others. But there
+   exists one problem. `git push <remote> <branch>` by default does not set the
+   local branch to track the remote one, so commands like `git pull` entered
+   after pushing will not work. There are two commonly used workarounds. First
+   one is pushing with `-u` option, which makes git to track the remote branch
+   after pushing. Second one is `git branch -u <remote-branch>` after pushing,
+   which sets the upstream branch explicitly.
+
+## Filter Commit
 
 Git provides lots of options to help filter commit that matches given pattern.
 There are some frequently used options.
