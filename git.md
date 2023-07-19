@@ -1,6 +1,6 @@
 # Git Note
 
-## Check Changes
+## Check changes
 
 Git has various ways to check changes made, and the most basic one is `git
 diff`.  Normally, we want to check these changes.
@@ -29,7 +29,7 @@ commit.
 
 `git diff <commit> <commit>` compares differences between two given commits.
 
-## Remove File
+## Remove file
 
 Remember that git has two areas in normal workflow, working tree directory and
 staging area, respectively. Commands vary depending on from which part(s) we
@@ -57,7 +57,7 @@ or remove from both forcefully with `git -f rm <file>...`. This is a safety
 feature to prevent accidental removal of data that has not yet been recorded in
 a snapshot and that can not be recovered from Git.
 
-## Remote Branch
+## Remote branch
 
 Some implict rules come into play when git handles remote branch. To understand
 these implict rules, we elaborate the following topics step by step.
@@ -128,7 +128,28 @@ We introduce git branch commands in the order of normal workflow.
    after pushing. Second one is `git branch -u <remote-branch>` after pushing,
    which sets the upstream branch explicitly.
 
-## Filter Commit
+## Rebasing
+
+`git rebase` moves the commits given to the top of other commit. Like merging,
+rebasing is used to integrate changes from one branch to another. However,
+while merging keeps commit history, rebasing modifies commit history.
+
+### Patch-id
+
+Git calculates a checksum that is based just on the patch introduced with the
+commit, called *patch-id*. This means git can determine if two commits make
+same changes. Now say the branch we want to rebase to has a commit that has the
+same patch as one of current branch, what git do is ignore this commit when
+rebasing. As a result, this commit will not be included in the commit log.
+
+### Move part of the branch
+
+`git rebase --onto <newbase> <upstream> <branch>` moves the commits from where
+`<upstream>` and `<branch>` diverged, to the top of `<newbase>`. This can also
+moves part of the branch, which causes the remaining commits to directly
+reapply on the top of its ancestor branch.
+
+## Filter commit
 
 Git provides lots of options to help filter commit that matches given pattern.
 There are some frequently used options.
