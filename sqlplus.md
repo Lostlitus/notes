@@ -62,7 +62,8 @@ exception-handling part. Only the executable part is required. Obviously, the
 order of these parts is logically designed. First comes the declarative part,
 in which items can be declared. Once declared, items can be manipulated in the
 executable part.  Exceptions raised during execution can be dealt with in the
-exception-handling part. The whole structure looks like this.
+exception-handling part. Take anonymous block as an example, the whole
+structure looks like this.
 
 ```sql
 DECLARE
@@ -95,3 +96,39 @@ of the line and press return.
 
 To end a SQL Plus command, press return. And this also run the command
 immediately.
+
+## PL/SQL blocks details
+
+Unlike SQL command, `SELECT` statement in PL/SQL blocks is forced to assign
+values to a variable by using `SELECT INTO`. This means we can not use select
+statement to print value to console.
+
+### Store Procedure
+
+Store procedure in SQL Plus has similar syntax as anonymous block. What differs
+most is that it has name and input/output arguments. Generally, it looks like
+this.
+
+```sql
+CREATE [OR REPLACE ] PROCEDURE procedure_name (parameter_list)     
+IS
+    --declaration statements
+BEGIN
+    --execution statements
+EXCEPTION
+    --exception handler
+END procedure_name;
+/
+```
+
+#### Privilege
+
+Oracle database compiles store procedure before invocation. And a compiled
+store procedure becomes invalid if its owner's privilege changes. In orcale
+there are two ways to changes privileges, grant directly and grant indirectly
+by role. Oracle believes role itself is a fluid properity, which may be changed
+easily. So oracle only uses directly granted privilege in store procedure to
+avoid frequently recompiling.  This means a user with privileges granted by
+role may encounter error when invoking store procedure, while in anonymous
+block everything goes well.
+
