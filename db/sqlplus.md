@@ -131,4 +131,3 @@ easily. So oracle only uses directly granted privilege in store procedure to
 avoid frequently recompiling.  This means a user with privileges granted by
 role may encounter error when invoking store procedure, while in anonymous
 block everything goes well.
-
