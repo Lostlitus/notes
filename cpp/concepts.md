@@ -3,13 +3,13 @@
 ## Why Concepts
 
 Concepts is a new terminology introduced in C++20. It is aimed to make
-templates more readable and simpler. It achieves the former goal by add
-constrains on template parameters, and achieves the latter by optimize the
+templates more readable and simpler. It achieves the former goal by adding
+constrains on template parameters, and achieves the latter by optimizing the
 grammer of templates. Besides, other benefits are introduced as well.
 
 ## More readable
 
-### Simple function template Example
+### Simple function template example
 
 Example first:
 
@@ -23,7 +23,7 @@ constexpr auto minus1(const T& value) {
 
 The template above minus the `value` by one and returns the result. What is
 different is that it has a `requires - concept` pair. The `requires` keyword
-indicates this template has requirement to its parameters.(or say, constrains)
+indicates this template has requirement(or say, constrains) to its parameters.
 And the `std::integral<T>` here is one requirement(i.e. concept), which is
 provided by the `<concepts>` standard library. This `requires clause` together
 means the parameter `T` should be an integer.
@@ -43,9 +43,9 @@ concept Addable = requires(T a, T b) {
 };
 ```
 
-`requires expression` shown above creates our own concept that can be used int
+`requires expression` shown above creates our own concept that can be used in
 `requires clause`. Simply put, the compiler will try to compile the expressions
-in the bracket. Only when the template parameters fulfill all the expressions
+in the bracket. Only when the template parameter fulfills all the expressions
 can it be considered as pass the check.
 
 One usage of this is to constrain the interface of template parameters given.
@@ -75,10 +75,10 @@ constexpr auto minus1(const std::integral auto& value) {
 }
 ```
 
-This example is the simplified version of the example given above, but much
-simpler. First, it omits the `parameter list` and replaces it with `auto`
-keyword. Second, it omits the `requires clause` and the concept is placed
-before the `auto` keyword.
+This example is idential to the *minus1* example given above, but much simpler.
+First, it omits the `parameter list` and replaces it with `auto` keyword.
+Second, it omits the `requires clause` and now the concept is placed before the
+`auto` keyword.
 
 ## Other benefits
 
