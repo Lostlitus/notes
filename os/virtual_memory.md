@@ -35,7 +35,7 @@ designs a unified abstraction with three corresponding goals. That is, VM.
 ## Clean abstraction
 
 Like main memory, VM is designed to have *virtual address(VA)* and *virtual
-address space*. Instaed of directly accessing, program now accesses main memory
+address space*. Instead of directly accessing, program now accesses main memory
 via VA indriectly. There is a hardware called *memory management unit(MMU)* in
 CPU to translate VA to PA.  The mapping relation is reocrded in a *page table*
 data structure stored in main memory. VM is implemented with the combination of
@@ -136,17 +136,13 @@ bit set), CPU triggers an exception.
 We've talked about big picture things about VM. Now here comes some design
 details.
 
-### Address translation
+### 1. Combine hardware and software
 
 We know that given a VA, VM translates it(to main memory address or to disk
 address depending on where the data is stored). Well, to implement it is quite
-complex.
-
-#### 1. Combine hardware and software
-
-Modern OS supports VM, and so as modern CPU. A dedicated hardware on CPU chip
-called *memory management unit(MMU)* is responsible for translating VA.
-Together with VM software, VA is translated properly.
+complex.  Modern OS supports VM, and so as modern CPU. A dedicated hardware on
+CPU chip called *memory management unit(MMU)* is responsible for translating
+VA.  Together with VM software, VA is translated properly.
 
 PT is stored in main memory, and a register called *page table base
 register(PTBR)* in CPU points to current process's PT. MMU uses PTBR as start
@@ -158,7 +154,7 @@ unsigned long type variable. A PTE has much more bitwise fields rather than
 simply one valid field and one address field. These fields make sure that VM
 system can manipulate data between main memory and disk in a correct way.
 
-#### 2. Fetch data
+### 2. Fetch data
 
 Take Linux as an example. The VM system extracts present bit from PTE, if
 set(cached VP), then some bits in PTE are extracted as *physical frame
@@ -168,21 +164,21 @@ is uncached or unallocated. For the former one, some bits in PTE are extracted
 as disk location, OS traps to fetch data from disk to main memory and returns
 data.  For the latter one, an exception is triggered.
 
-#### 3. Cache PTE
+### 3. Cache PTE
 
 In the case of VM system, an extra look up for PTE is unavoidable.  Although
 PTE is small enough to stored in L1 cache, fetching it still costs a handful of
 cycles.  To speed up translation, *translation lookaside buffer(TLB)* is
 introduced in MMU as cache(set-associative) for PTEs above L1 cache.
 
-#### 4. Match cache line via PA
+### 4. Match cache line via PA
 
 OS uses address to matches data in cache line. Now we has VA and PA, which one
 should we use? Well, we choose PA. That is, MMU translates VA to PA before
 looking up the data in cache. Since distinct VPs may point to same PP,
 translating PA first helps better utilize cache.
 
-#### 5. Multi-level PT
+### 5. Multi-level PT
 
 Thus far, we've assumed that each process has only one PT. However, this
 assumption is not realistic. Let's do some calculation.
@@ -225,3 +221,54 @@ with `10 * 2 ^ 10 * 2 ^ 12 = 40MB` memory used, also a quite reasonable size.
 
 In 64 bits OS, PT with more hierarchy level is used.(for example 4 level in
 Linux) So VM system works great here as well.
+
+### 6. Memory layout
+
+In Linux, the higher part of vitual memory space is held for kernel and the
+lower part for process. The briefly introduction(from top to bottom) looks like
+this:
+
+```txt
+Kernel space:
+
+1. Process-specific data like page table and process section
+   addresses.(different for each process)
+2. The whole physical memory space mapped for convenience.(idential for each
+   process)
+3. Kernal code and data.(idential for each process)
+
+Process space:
+
+1. Stack.
+2. Shared libraries.
+3. Heap.
+4. .bss section for uninitialized data.
+5. .data section for initialized data.
+6. .text section for code.
+```
+
+As talked above, memory section is either mapped to named file or anonymous
+file.  Linux does not load this section once the process is created, since it
+costs time and space. Instead, *demand paging* is used, which loads data from
+disk only when needed. For those sections mapped to named file, data with
+content will be swapped. And for those mapped to anonymous file, memory
+initialized with all zero are allocated, which is called *demand-zero* page.
+
+Sections mapped to anonymous file includes *Stack*, *Heap* and *.bss section*.
+An important point to notice here is that the initial stack and heap are all
+zero beacuse of demand-zero, so why the uninitialized variable built on stack
+or heap in C/C++ program is not guaranteed to be zero? That's beacuse these
+areas may be used before, but they are not set back to all zero after.
+
+### 7. Memory sharing
+
+Linux tags memory section of a virtual memory space as either shared or
+private.  For the memory section that should be shared across processes like
+shared libraries, it is tagged as shared and only one instance of it is
+allocated in physical memory. And for shouldn't shared one like stack section,
+private is tagged.
+
+But it still feasible to share private section. For example, *fork()* system
+call does not create a copy of private section of parent process, instead the
+child process just points to the one of parent process and create its own one
+only when write operation need to apply to this section.
