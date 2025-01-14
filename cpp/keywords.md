@@ -13,7 +13,7 @@ these days, its role has been changed when we use it in a project.
 ### The original intent
 
 Inline keyword was first designed to indicate the compiler to expand the
-funtion so as to avoid overhead of calling it. But actually a compiler can
+function so as to avoid overhead of calling it. But actually a compiler can
 choose to ignore it or even inline a function that is not qualified by inline
 keyword.  And the programer can hardly preceive it, since the compiler always
 does better job in optimizing the code.
@@ -37,13 +37,14 @@ included more than once. Formal definition can be find
 
 ## `extern`
 
-`extern` keyword lets variable/funtion to have *external linkage*. It provides
-the semantic that outer environment can use the symbol declared with `extern`.
+`extern` keyword lets entity (variable and function) to have *external
+linkage*. (check the talk about linkage in `cpp/linkage.md`) It provides the
+semantic that outer environment can use this symbol.
 
 ### 1. For global variable
 
 Global variable has external linkage by default. But it's declaration and
-definition are combined together.(global variable are zero-initialization by
+definition are combined together. (global variable are zero-initialization by
 default) This means if one want to share a global variable by putting it in a
 header file, multiply definition may appear. So a better approach is adding
 extern for the global variable. In this way, the declaration and definition can
@@ -62,9 +63,9 @@ The example above well resloves the multiply definition error.
 ### 2. For function
 
 Like global variable, function has external linkage by default. Unlike global
-variable, funtion's declaration and definition can be separated without the
+variable, function's declaration and definition can be separated without the
 help of extern.  So extern is quite useless here. Of course you can add extern
-for a funtion to explicitly indicate that the function has external linkage.
+for a function to explicitly indicate that the function has external linkage.
 
 ### 3. For const global variable
 
@@ -152,3 +153,10 @@ compiling, so just consider it as the standard way.
 
 By the way, function overloading is not permitted in the scope of `extern C`,
 since C does not supports it.
+
+### 5. For template
+
+Like global variable, explicit template instantiation statement combines
+declaration and definition. So like what `extern` does to global variable, it
+can divide the two. This helps to restrict template instantiation. Check the
+detail talk in `cpp/template`.

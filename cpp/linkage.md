@@ -4,8 +4,8 @@ Linkage plays a role in link time. It indicates the visibility of an entity
 (variable or function) across translation units.
 
 1. External Linkage: can be referred to from other translation units. Only one
-   instance across all translation units.
-2. Internal Linkage: used in its translation unit. One instance per translation
+   entity across all translation units.
+2. Internal Linkage: used in its translation unit. One entity per translation
    unit if included.
 3. No Linkage: used in its scope only.
 
@@ -26,7 +26,7 @@ Linkage plays a role in link time. It indicates the visibility of an entity
 
 One should remember that the talk about linkage happens in link time only and
 for entity only. The reason why linkage is introduced is becasue it helps to
-resolve the problem that how many instance of one entity should a program keep.
+resolve the problem of how many entity should a program keep.
 
 But there has contents that are not entity, like class definition. And they can
 meet problems like definition conflict as well. So here comes the verse of
