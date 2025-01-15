@@ -26,7 +26,7 @@ lower address -> higher address
 0x1 0x2 0x3 0x4
 ```
 
-But there are types of data block need multiply bytes to store, from `int` to
+But there are types of data block need multiple bytes to store, from `int` to
 `structure` and to `unicode`. Here comes the question. Are these the bytes in
 these data stored from lower byte to higher byte as well? Now endianness
 appears.

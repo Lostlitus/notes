@@ -46,7 +46,7 @@ semantic that outer environment can use this symbol.
 Global variable has external linkage by default. But it's declaration and
 definition are combined together. (global variable are zero-initialization by
 default) This means if one want to share a global variable by putting it in a
-header file, multiply definition may appear. So a better approach is adding
+header file, multiple definition may appear. So a better approach is adding
 extern for the global variable. In this way, the declaration and definition can
 be isolated into two parts.
 
@@ -58,7 +58,7 @@ extern int val;
 int val = 10;
 ```
 
-The example above well resloves the multiply definition error.
+The example above well resloves the multiple definition error.
 
 ### 2. For function
 

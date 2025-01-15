@@ -8,7 +8,7 @@ tricky to resolve. It's better to avoid it before actually meeting it.
 Compile time conflicts appear in the scoop of translation unit.  C++ expands
 the file indicated by `#include` preprocessor directive in preprocess time and
 compiles it in compile time. Here comes the question.  If a header file is
-expanded multiply times, then the definitions in it appears more than once, and
+expanded multiple times, then the definitions in it appears more than once, and
 definition conflict occurs.
 
 ```C++

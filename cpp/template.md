@@ -70,7 +70,7 @@ instantiate for it.
 Another benefit of explicit instantiation is that it avoids code bloat.
 Compiler generates instantiated template code per translation unit. If one
 template is used among translation units, it may be instantiated by some set of
-types multiply times.  Although linker will discard the redundant codes in link time,
+types multiple times.  Although linker will discard the redundant codes in link time,
 it waste our compile time disk and CPU.  However, if we arrange the code
 structure like the example above, in which the compiler generates the code of
 `C<int>` only in the translation unit of `template_demo.cpp`. We can limit the

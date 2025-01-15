@@ -10,7 +10,7 @@ listed in plain words, however, they are quite clear.
 ## Get source code
 
 We can get source code in various ways. The most basic way is cloning from the
-git repository. Some repositories maintain multiply versions, so we need to
+git repository. Some repositories maintain multiple versions, so we need to
 checkout to the corresponding branch we want. Another basic way is downloading
 archive from official website and we then get the source code by extracting it.
 
