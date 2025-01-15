@@ -22,8 +22,8 @@ than `int&`.
 
 ## Value categories are for expression only
 
-Only expression has value categories, which consists of lvalue, xvalue,
-prvalue, glvalue and rvalue. Their relations can be clarified in a tree view:
+Only expression has value category, which consist of lvalue, xvalue, prvalue,
+glvalue and rvalue. Their relations can be clarified in a tree view.
 
 ```txt
 lvalue    xvalue    prvalue
@@ -39,7 +39,7 @@ can be checked [here](https://en.cppreference.com/w/cpp/language/value_category)
 And the original proposals can be read [here](https://stackoverflow.com/a/38169963/13692802).
 
 *Expression only* means an object itself **never** has any value category. We
-should not confuse expression and object . The reason why you can find
-imprecise statements like `Object xx is a lvalue` is because an object
-itself can be used as an expression, and an expression with only a named
-object is a lvalue expression.
+should not confuse expression and object. The reason why you can find imprecise
+statements like `Object xx is a lvalue` is because an object itself can be used
+as an expression, and an expression with only a named object is a lvalue
+expression.

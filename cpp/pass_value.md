@@ -1,4 +1,4 @@
-# Optimization for passing value
+# Pass value
 
 Intuitively speaking, a variable is passed by value. And understanding what the
 program is doing is quite easy with this mechanism. But C++ need performance.
@@ -18,7 +18,7 @@ comes to passing value.
 The remaining part of this article is mixed with tons of discussion about value
 category. You should make sure you've fully understand what exactly value
 category is, or you'll be messed up. To figure out what is value category, read
-the note `expression` first.
+the note `cpp/expression` first.
 
 The value categories talked below are under the context that they are used in
 expressions.(since only expression has value categories)
@@ -103,12 +103,12 @@ guaranteed, the compiler is forced to apply copy elision, and if not, it leaves
 the decision to the compiler.  One should write copy elision friendly code to
 trigger this optimization.
 
-### Copy elision guaranteed(URVO)
+### Copy elision guaranteed
 
 *Prvalue semantics* guarantees copy elision since C++17. Just as what copy
 elision means, a prvalue is not materialized until needed, and then it is
 constructed directly into the storage of its final destination. This variant of
-copy elision is known as URVO(unnamed return value optimization).
+copy elision is known as *URVO(unnamed return value optimization)*.
 
 Example:
 
@@ -120,8 +120,9 @@ T x = T(T(f())); // x is initialized by the result of f() directly.
 
 ### Copy elision not guaranteed
 
-Copy elision is guaranteed when the variable has name/identity.  This variant
-of copy elision is known as NRVO(named return value optimization).
+Copy elision is not guaranteed when the variable has name/identity, but
+compiler is allowed to omit the copy.  This variant of copy elision is known as
+*NRVO(named return value optimization)*.
 
 Example:
 
