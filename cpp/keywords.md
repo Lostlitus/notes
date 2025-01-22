@@ -37,16 +37,16 @@ included more than once. Formal definition can be find
 
 ## `extern`
 
-`extern` keyword lets entity (variable and function) to have *external
-linkage*. (check the talk about linkage in `cpp/linkage.md`) It provides the
-semantic that outer environment can use this symbol.
+`extern` keyword lets name to have *external linkage*. (check the talk about
+linkage in `cpp/linkage.md`) It provides the semantic that outer environment
+can use this symbol.
 
 ### 1. For global variable
 
-Global variable has external linkage by default. But it's declaration and
-definition are combined together. (global variable are zero-initialization by
-default) This means if one want to share a global variable by putting it in a
-header file, multiple definition may appear. So a better approach is adding
+Name of global variable has external linkage by default. But it's declaration
+and definition are combined together. (global variable are zero-initialization
+by default) This means if one want to share a global variable by putting it in
+a header file, multiple definition may appear. So a better approach is adding
 extern for the global variable. In this way, the declaration and definition can
 be isolated into two parts.
 
@@ -62,18 +62,19 @@ The example above well resloves the multiple definition error.
 
 ### 2. For function
 
-Like global variable, function has external linkage by default. Unlike global
-variable, function's declaration and definition can be separated without the
-help of extern.  So extern is quite useless here. Of course you can add extern
-for a function to explicitly indicate that the function has external linkage.
+Like global variable, name of function has external linkage by default. Unlike
+global variable, function's declaration and definition can be separated without
+the help of extern.  So extern is quite useless here. Of course you can add
+extern for a function to explicitly indicate that the name of function has
+external linkage.
 
 ### 3. For const global variable
 
-Const global variable has *internal linkage* by default. Hum, quite reasonable
-if take its semantic in consideration. Since const variable just plays the same
-role as literal. Well, there still exists case that share one instance across
-translation units is needed. To achieve this we can add extern for it, which
-grants const global variable with external linkage explicitly.
+Name of const global variable has *internal linkage* by default. Hum, quite
+reasonable if take its semantic in consideration. Since const variable just
+plays the same role as literal. Well, there still exists case that share one
+instance across translation units is needed. To achieve this we can add extern
+for it, which grants const global variable with external linkage explicitly.
 
 ### 4. For compatible with C
 
@@ -160,3 +161,23 @@ Like global variable, explicit template instantiation statement combines
 declaration and definition. So like what `extern` does to global variable, it
 can divide the two. This helps to restrict template instantiation. Check the
 detail talk in `cpp/template`.
+
+## `static`
+
+The most crazy thing about `static` is that it has different semantic under
+different context. The reason may becasue committees want to save keywords:D
+Anyway, we introduce all scenarios.
+
+### 1. File scope and namespace scope
+
+The name of function or variable declared as static has internal linkage.
+
+### 2. Class scope
+
+The function or data member is not associated with an object of that class. It
+works like global variable/function. The name have external linkage as well.
+
+### 3. Function scope
+
+The variable declared static is independent of the current invokation of the
+function and will be initialized only once. The name has no linkage.

@@ -1,37 +1,47 @@
 # Linkage
 
-Linkage plays a role in link time. It indicates the visibility of an entity
-(variable or function) across translation units.
+Linkage plays a role in link time. It indicates the visibility of name across
+translation units. This aims to avoid name conflict. For the name with related
+entity, compiler/linker or programer needs to keep its entity unique in its
+scoop as well.
 
 1. External Linkage: can be referred to from other translation units. Only one
-   entity across all translation units.
-2. Internal Linkage: used in its translation unit. One entity per translation
-   unit if included.
+   related entity is permitted across all translation units.
+2. Internal Linkage: used in its translation unit only. One related entity per
+   translation unit, but only visable in in its translation unit.
 3. No Linkage: used in its scope only.
 
-## Default linkage
+## Some common linkage
 
-- Global variable and function have external linkage.
-- Local variable has no linkage.
+- Name of global variable/function has external linkage.
+- Name of class has external linkage.
+- name of local variable has no linkage.
+
+Check detail in [here](https://en.cppreference.com/w/cpp/language/storage_duration)
 
 ## Change linkage explicitly
 
-- Global variable with `static`/`const` has internal linkage.
-- Global function with `static` has internal linkage.
-- `const` global variable with `extern` has external linkage.
-- `static`/`const` global variable with `inline` has external linkage.
-- Global variable/function in anonymous namespace has internal linkage.
+- Name of global variable with `static`/`const` has internal linkage.
+- Name of global function with `static` has internal linkage.
+- Name of `static` variable member  has external linkage. (name of `static`
+  member function keeps external linkage as non-`static` one)
+- Name of `const` global variable with `extern` has external linkage.
+- Name of `static`/`const` global variable with `inline` has external linkage.
+- External linkage name (like `static` variable member's) in in anonymous
+  namespace has internal linkage.
 
-## For entity only
+## For name only
 
-One should remember that the talk about linkage happens in link time only and
-for entity only. The reason why linkage is introduced is becasue it helps to
-resolve the problem of how many entity should a program keep.
+One should keep in mind that the talk about linkage happens in link time only
+and for name only. The reason why linkage is introduced is becasue it helps to
+resolve the problem of name conflict as we've said at beginning.
 
-But there has contents that are not entity, like class definition. And they can
-meet problems like definition conflict as well. So here comes the verse of
-static and anonymous namespace. Both of them can turn global variable/function
-to have internal linkage. But anonymous namespace also can hiding name of other
-contents like we said above, class definition. This way, name conflict during
-link time can be resolved. So now the much more mordern way is using anonymous
-namespace.
+For example, name of a global variable has external linkage, programer should
+make sure it is defined only once across all translation units. So only one
+entity of it is in the program. But when it comes to name of static global
+variable, each translation unit can have its own entity. And compiler and
+linker would makes sure it's invisable to other translation unit.
+
+Name of type (like class) is special, since no entity is here. But it still
+meets the problem of name conflict, so linkage is needed. Remember linkage is
+to avoid **name** conflict.
