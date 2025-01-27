@@ -15,12 +15,19 @@ interface from base class, and the derived class's function is then found and
 actually invoked. Back to constructor, you always need the whole information of
 the object you want to create, which does not fit the conception of virtual
 function.  So just no virtual constructor. Details can be viewed
-[here](http://www.stroustrup.com/bs_faq2.html#virtual-ctor) from Bjarne
+[here](https://www.stroustrup.com/bs_faq2.html#virtual-ctor) from Bjarne
 Stroustrup.
 
 ### 1.2 What does a derived class do when constructing?
 
 In C++, a derived class constructor always invoke base class constructor first.
-If an explicit invocation does not appear in the member-initializer list, there
-is an implicit call to the default constructor. The implicit call here can be
-easily missed.
+We can call it explicitly in member-initializer list, and the real order would
+be the same order as inheritance order in the case of multiple inheritance.  If
+no explicit invocation, there would be an implicit call to base class's default
+constructor.
+
+After that data member would be initialized. Similarly, we can initialize it
+explicitly in member-initializer list, but the real order would be the
+definition order.
+
+Finally, the code block in derived class constructor would be executed.
