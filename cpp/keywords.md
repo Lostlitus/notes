@@ -165,7 +165,7 @@ detail talk in `cpp/template`.
 ## `static`
 
 The most crazy thing about `static` is that it has different semantic under
-different context. The reason may becasue committees want to save keywords:D
+different context. The reason may because committees want to save keywords:D
 Anyway, we introduce all scenarios.
 
 ### 1. File scope and namespace scope
