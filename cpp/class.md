@@ -32,6 +32,24 @@ definition order.
 
 Finally, the code block in derived class constructor would be executed.
 
+### 1.3 What happens when invoke virtual function in constructor?
+
+It depends on language implementation. In C++, a class is built from base class
+to derive class, so as virtual table. So when invoking base class constructor,
+and the base class constructor calls virtual function, then the base class's
+version of virtual function is called. After entering derive class
+constructor's body, and if it calls virtual function as well, then the derive
+class's one is called. As a result, it's always the virtual function that in
+the same hierarchy level would be called. This rule applies to destructor as
+well.
+
+One thing to note is if the constructor calls a pure virtual function, compiler
+would throw an error, since it cannot find the implementation.
+
+Here we can see the virtual function actually works like a non-virtual
+function.  So yes, you should *avoid* invoking virtual function in constructor,
+it just makes no sense. No polymorphic here.
+
 ## 2. Member function
 
 ### 2.1 How does const member function work?
@@ -74,3 +92,72 @@ not change the consistency is permitted. A classic scenario is using lock in
 const member function. Acquiring and releasing lock modifies data in lock
 member, but the class instance's consistency remains unchanged, so `mutable` is
 required.
+
+## 3. Inheritance
+
+### 3.1 Why virtual inheritance
+
+C++ supports multiple inheritance. It's possible for a class to inherit from
+two classes which inherit from same base class. This way, the derived class
+would have two set of identical data from that base class. It leads to
+ambiguous look up when we try to access the data in the code.
+
+```C++
+class Base {
+public:
+  int data;
+};
+
+class Derive1 : public Base {
+};
+
+class Derive2 : public Base {
+};
+
+class Final : public Derive1, public Derive2 {
+  void func() {
+    this->data;
+  }
+};
+```
+
+The `func` above access `data` member in `Base`, but `Final` has two instance
+of `data`, so `this->data` is ambiguous.
+
+One quickfix is indicating which one to access via base class path.
+
+```C++
+class Final : public Derive1, public Derive2 {
+  void func() {
+    this->Derive1::data;
+    this->Derive2::data;
+  }
+};
+```
+
+But the problem still exists, `data` is redundant. So here comes *virtual
+inheritance*. By marking classes with same base class as `virtual` inherit.
+Compiler would drop the duplicate base class data and keep only one copy of the
+data.
+
+```C++
+class Base {
+public:
+  int data;
+};
+
+class Derive1 : virtual public Base {
+};
+
+class Derive2 : virtual public Base {
+};
+
+class Final : public Derive1, public Derive2 {
+  void func() {
+    this->data;
+  }
+};
+```
+
+Here we marks both `Derive1` and `Derive2` as `virtual` inherit from `Base`, so
+`Final` only has one set of `data` from `Base`. No ambiguity now.
