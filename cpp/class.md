@@ -4,7 +4,7 @@ Class is the core conception of OOP, the same goes for C++. Defining and using
 a class is quite easy in C++. But there are some questions that may mess you
 up. Now we go through these in FAQ format.
 
-## 1. Construction
+## 1. Construction && destruction
 
 ### 1.1 Why no virtual constructor?
 
@@ -32,23 +32,24 @@ definition order.
 
 Finally, the code block in derived class constructor would be executed.
 
-### 1.3 What happens when invoke virtual function in constructor?
+### 1.3 What happens when invoking virtual function in constructor?
 
 It depends on language implementation. In C++, a class is built from base class
-to derive class, so as virtual table. So when invoking base class constructor,
-and the base class constructor calls virtual function, then the base class's
-version of virtual function is called. After entering derive class
-constructor's body, and if it calls virtual function as well, then the derive
-class's one is called. As a result, it's always the virtual function that in
-the same hierarchy level would be called. This rule applies to destructor as
-well.
+to derived class. Say virtual function is called in both base class constructor
+and derived class constructor. When constructing, base class constructor is
+called and the virtual pointer is set to base class virtual table, so base
+class version virtual function is called. After that derived class constructor
+is called and the virtual pointer would set to derived class virtual table, so
+now derived class version virtual function would be called.  As a result, it's
+always the virtual function that in the same hierarchy level would be called.
+This rule applies to destructor as well.
 
 One thing to note is if the constructor calls a pure virtual function, compiler
 would throw an error, since it cannot find the implementation.
 
 Here we can see the virtual function actually works like a non-virtual
-function.  So yes, you should *avoid* invoking virtual function in constructor,
-it just makes no sense. No polymorphic here.
+function.  So yes, you **should** avoid invoking virtual function in
+constructor. It makes no sense. No polymorphic here.
 
 ## 2. Member function
 
